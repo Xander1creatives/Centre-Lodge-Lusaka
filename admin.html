@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#ffffff">
+<title>Staff area – Center Lodge</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="instyles.css"><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/admin.css">
+</head>
+<body data-admin="1">
+
+<div id="loginView" class="login">
+  <form class="login-card" id="loginForm" autocomplete="on" novalidate>
+    <div class="plate"><img src="images/logo.png" alt="Center Lodge" width="150" height="109"></div>
+    <h1>Staff sign in</h1>
+    <div id="loginMsg" aria-live="polite"></div>
+    <label class="fld">Email<input id="lEmail" type="email" autocomplete="username" required></label>
+    <label class="fld">Password<input id="lPass" type="password" autocomplete="current-password" required></label>
+    <button class="btn" type="submit" id="lBtn">Sign in</button>
+    <p class="mini">Authorised staff only. Activity is logged.</p>
+  </form>
+</div>
+
+<div id="appView" hidden>
+  <div class="abar">
+    <a class="logo" href="admin.html" aria-label="Center Lodge staff area"><img src="images/logo.png" alt="Center Lodge" width="60" height="44"></a><span class="staff-tag">Staff</span>
+    <span class="live" id="live" title="Connection status">Connecting…</span>
+    <span class="grow"></span>
+    <button class="bell" id="bell" aria-label="Notifications">Notifications <b id="bellN" hidden>0</b></button>
+    <span class="who" id="who"></span>
+    <button class="btn o small" id="logout">Sign out</button>
+  </div>
+  <div class="atabs" role="tablist" id="atabs">
+    <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+    <button role="tab" data-tab="reservations" aria-selected="false">Reservations</button>
+    <button role="tab" data-tab="availability" aria-selected="false">Availability</button>
+    <button role="tab" data-tab="new" aria-selected="false">New booking</button>
+    <button role="tab" data-tab="rooms" aria-selected="false">Rooms &amp; rates</button>
+    <button role="tab" data-tab="notifications" aria-selected="false">Notifications <b id="tabN" class="dotn" hidden>0</b></button>
+  </div>
+  <main class="amain">
+    <section id="p-overview"></section>
+    <section id="p-reservations" hidden></section>
+    <section id="p-availability" hidden></section>
+    <section id="p-new" hidden></section>
+    <section id="p-rooms" hidden></section>
+    <section id="p-notifications" hidden></section>
+  </main>
+</div>
+<dialog id="dlg" aria-label="Booking details"></dialog>
+
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase-library.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

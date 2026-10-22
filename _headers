@@ -1,0 +1,25 @@
+# Security headers for Netlify and Cloudflare Pages (file name must stay "_headers")
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  Cross-Origin-Opener-Policy: same-origin
+
+/admin.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Referrer-Policy: no-referrer
+
+/manage.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex
+
+/setup-check.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable

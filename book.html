@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="instyles.css"><link rel="stylesheet" href="css/app.css">
+<title>Book a room – Center Lodge</title>
+<meta name="description" content="Check live room availability and book your stay at Center Lodge.">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header id="header">
+  <a class="logo" href="index.html" aria-label="Center Lodge home"><img src="images/logo.png" alt="Center Lodge" width="94" height="68"></a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+  <nav id="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#services">Services</a>
+    <a href="book.html">Book a room</a>
+    <a href="manage.html">My bookings</a>
+    <a href="index.html#contact">Contact</a>
+    <a class="btn" href="book.html">Book now</a>
+  </nav>
+</header>
+<main class="page" id="main">
+ <div class="narrow">
+  <h1>Book your stay</h1>
+  <p class="lead-sm">Live availability for every room type. Choose your dates, pick a room and reserve in under a minute.</p>
+  <ol class="steps" id="steps"><li class="on">Dates &amp; room</li><li>Your details</li><li>Reserved</li></ol>
+  <div class="alert bad" id="offline" hidden>The booking system is not connected yet. Please contact the lodge to reserve.</div>
+
+  <section id="s1">
+    <form class="searchbar" id="searchForm" novalidate>
+      <label>Check-in<input type="date" id="in" required></label>
+      <label>Check-out<input type="date" id="out" required></label>
+      <label>Guests<input type="number" id="guests" min="1" max="60" value="2" inputmode="numeric" required></label>
+      <label>Rooms<input type="number" id="rooms" min="1" max="10" value="1" inputmode="numeric" required></label>
+      <button type="submit" class="go btn">Check availability</button>
+    </form>
+    <div id="msg" aria-live="polite"></div>
+    <div id="results" aria-live="polite"></div>
+  </section>
+
+  <section id="s2" hidden>
+    <div class="cols">
+      <form id="detailsForm" novalidate autocomplete="on">
+        <h2>Your details</h2>
+        <div class="form-grid">
+          <label class="fld wide">Full name<input id="name" name="name" autocomplete="name" maxlength="80" required></label>
+          <label class="fld">Email<input id="email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
+          <label class="fld">Phone / WhatsApp<input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" placeholder="097 123 4567" required></label>
+          <label class="fld wide">Special requests (optional)<textarea id="notes" name="notes" maxlength="500" placeholder="Arrival time, extra bed, anything we should know"></textarea></label>
+        </div>
+        <label class="hp" aria-hidden="true">Leave this empty<input id="hp" name="website" tabindex="-1" autocomplete="off"></label>
+        <label class="consent"><input type="checkbox" id="agree" required> I agree that Center Lodge may use these details to process and manage my booking.</label>
+        <div id="formMsg" aria-live="polite"></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button type="button" class="btn o" id="back">&larr; Change room or dates</button>
+          <button type="submit" class="btn" id="confirm">Confirm reservation</button>
+        </div>
+        <p class="safe">You pay at the lodge. We never collect card details on this website.</p>
+      </form>
+      <aside class="summary" id="summary" aria-label="Booking summary"></aside>
+    </div>
+  </section>
+
+  <section id="s3" hidden></section>
+ </div>
+</main>
+<footer>
+  <div class="legal" style="border-top:0;padding:30px 5vw">
+    <a class="foot-logo" href="index.html" aria-label="Center Lodge home"><img src="images/logo.png" alt="Center Lodge" width="116" height="84"></a>
+    <p style="color:#fff;font:400 20px var(--serif);margin-bottom:6px">Center Lodge — Your Comfort, Your Celebrations, Our Hospitality!</p>
+    <p>We will never ask for your card number, PIN or password by phone, SMS, WhatsApp or email.</p>
+    <p>&copy; <span id="year">2026</span> Center Lodge. All rights reserved.</p>
+  </div>
+</footer>
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase-library.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/book.js"></script>
+</body>
+</html>

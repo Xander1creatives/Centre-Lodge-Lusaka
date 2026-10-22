@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /setup-check.html
+Disallow: /supabase/

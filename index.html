@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Center Lodge – Where Comfort Meets Exceptional Hospitality</title>
+<meta name="description" content="Center Lodge: comfortable accommodation, a welcoming restaurant, conference facilities, wedding receptions, kitchen parties, marriage blessings and corporate events.">
+<meta name="theme-color" content="#ffffff">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="instyles.css">
+</head>
+<body data-home="1">
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="header">
+  <a class="logo" href="#home" aria-label="Center Lodge home"><img src="center-lodge-logo.png" alt="Center Lodge" width="94" height="68"></a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+  <nav id="nav" aria-label="Main">
+    <a href="#home">Home</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="manage.html">My bookings</a>
+    <a href="#contact">Contact</a>
+    <a class="btn" href="#reserve" data-intent="Accommodation">Book now</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- HERO SLIDER -->
+  <section class="hero" id="home" aria-roledescription="carousel" aria-label="Center Lodge highlights">
+    <div class="trk" id="trk">
+      <div class="sl s1" style="--img:url('Blue ginger slide.png')"></div>
+      <div class="sl s2" style="--img:url('Blue ginger slide1.png')"></div>
+      <div class="sl s3" style="--img:url('Blue ginger slide2.png')"></div>
+      <div class="sl s4" style="--img:url('Blue ginger slide.png')"></div>
+      <div class="sl s5" style="--img:url('Blue ginger slide1.png')"></div>
+      <div class="sl s6" style="--img:url('Blue ginger slide2.png')"></div>
+    </div>
+    <div class="cap" id="cap" aria-live="polite">
+      <i class="ico" data-icon="sparkle"></i>
+      <h1>Center Lodge</h1>
+      <p>Where Comfort Meets Exceptional Hospitality</p>
+      <a class="btn" href="#reserve" data-intent="Accommodation">Book your stay</a>
+    </div>
+    <div class="dots" id="dots" role="tablist" aria-label="Choose slide"></div>
+  </section>
+
+  <!-- RESERVATION / BOOKING SECTION -->
+  <section class="bk" id="reserve" aria-label="Make a reservation">
+    <div class="tabs" role="tablist" aria-label="What would you like to reserve?">
+      <button type="button" role="tab" id="tab-stay" aria-selected="true" aria-controls="bkForm" data-tab="stay"><i class="ico xs" data-icon="bed"></i><span>Stay</span></button>
+      <button type="button" role="tab" id="tab-dine" aria-selected="false" aria-controls="bkForm" data-tab="dine"><i class="ico xs" data-icon="cloche"></i><span>Dine</span></button>
+      <button type="button" role="tab" id="tab-event" aria-selected="false" aria-controls="bkForm" data-tab="event"><i class="ico xs" data-icon="popper"></i><span>Events</span></button>
+    </div>
+
+    <form class="bkform" id="bkForm" novalidate>
+      <!-- STEP 1: choose -->
+      <div class="step" id="step1">
+        <div class="fields" data-group="stay">
+          <label>Check-in<input type="date" id="stayIn"></label>
+          <label>Check-out<input type="date" id="stayOut"></label>
+          <label>Guests<select id="stayGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7+</option></select></label>
+          <label>Rooms<select id="stayRooms"><option selected>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select></label>
+          <button type="submit" class="go">Check availability</button>
+        </div>
+        <div class="fields" data-group="dine" hidden>
+          <label>Date<input type="date" id="dineDate"></label>
+          <label>Time<input type="time" id="dineTime" value="19:00"></label>
+          <label>Guests<select id="dineGuests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10+</option></select></label>
+          <button type="submit" class="go">Reserve a table</button>
+        </div>
+        <div class="fields" data-group="event" hidden>
+          <label>Event type
+            <select id="evType">
+              <option>Wedding reception</option>
+              <option>Kitchen party / marriage blessing</option>
+              <option>Conference facilities</option>
+              <option>Corporate event / special function</option>
+            </select>
+          </label>
+          <label>Event date<input type="date" id="evDate"></label>
+          <label>Guests expected<input type="number" id="evGuests" min="1" inputmode="numeric" placeholder="e.g. 80"></label>
+          <button type="submit" class="go">Request booking</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: your details -->
+      <div class="step" id="step2" hidden>
+        <p class="sum" id="bkSummary"></p>
+        <div class="fields two-up">
+          <label>Your name<input type="text" id="bkName" autocomplete="name" placeholder="Full name"></label>
+          <label>Phone / WhatsApp<input type="tel" id="bkPhone" autocomplete="tel" placeholder="097 123 4567"></label>
+          <label class="wide">Special requests (optional)<input type="text" id="bkNotes" placeholder="Anything we should know?"></label>
+          <button type="submit" class="go">Send reservation request</button>
+        </div>
+        <button type="button" class="back" id="bkBack">&larr; Change details</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- INTRO -->
+  <section class="wrap center" id="welcome">
+    <h2>Comfort, great food, and memorable experiences</h2>
+    <p class="m lead">At Center Lodge, we bring people together through comfort, great food, and memorable experiences. Whether you are looking for a relaxing stay, a delicious meal, or the perfect venue for your special occasion, we are here to make every moment exceptional.</p>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="wrap tight" id="services">
+    <h2 class="h-ic"><i class="ico sm" data-icon="sparkle"></i> Our Services Include</h2>
+    <div class="g">
+      <article class="c">
+        <div class="ph s2" style="--img:url('blue ginger ad.png')"><i class="ico lg" data-icon="bed"></i></div>
+        <div class="cb"><h3>Accommodation</h3><p class="m">Comfortable and relaxing rooms for your stay.</p><a class="btn o" href="#reserve" data-intent="Accommodation">Book a room</a></div>
+      </article>
+      <article class="c">
+        <div class="ph s3" style="--img:url('blue ginger ad6.png')"><i class="ico lg" data-icon="cloche"></i></div>
+        <div class="cb"><h3>Restaurant Services</h3><p class="m">Enjoy delicious meals and a welcoming dining experience.</p><a class="btn o" href="#reserve" data-intent="Restaurant table">Reserve a table</a></div>
+      </article>
+      <article class="c">
+        <div class="ph s4" style="--img:url('blue ginger ad2.png')"><i class="ico lg" data-icon="conference"></i></div>
+        <div class="cb"><h3>Conference Facilities</h3><p class="m">Professional spaces for meetings, workshops, and business conferences.</p><a class="btn o" href="#reserve" data-intent="Conference facilities">Enquire</a></div>
+      </article>
+      <article class="c">
+        <div class="ph s5" style="--img:url('blue ginger ad3.png')"><i class="ico lg" data-icon="rings"></i></div>
+        <div class="cb"><h3>Wedding Receptions</h3><p class="m">Celebrate your love in a beautiful and welcoming setting.</p><a class="btn o" href="#reserve" data-intent="Wedding reception">Plan your day</a></div>
+      </article>
+      <article class="c">
+        <div class="ph s1" style="--img:url('blue ginger ad3.png')"><i class="ico lg" data-icon="heart"></i></div>
+        <div class="cb"><h3>Kitchen Parties &amp; Marriage Blessings</h3><p class="m">The perfect venue for celebrating love, family, and tradition.</p><a class="btn o" href="#reserve" data-intent="Kitchen party / marriage blessing">Enquire</a></div>
+      </article>
+      <article class="c">
+        <div class="ph s6" style="--img:url('blue ginger ad3.png')"><i class="ico lg" data-icon="popper"></i></div>
+        <div class="cb"><h3>Corporate Events &amp; Special Functions</h3><p class="m">Host your business gatherings, celebrations, and memorable events with us.</p><a class="btn o" href="#reserve" data-intent="Corporate event / special function">Enquire</a></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ROOMS (loaded live from the booking system) -->
+  <section class="wrap tight" id="rooms" hidden>
+    <h2>Our Rooms</h2>
+    <div class="g" id="roomGrid"></div>
+  </section>
+
+  <!-- ABOUT BAND -->
+  <section class="band" id="about">
+    <div class="wrap">
+      <i class="ico lg" data-icon="heart"></i>
+      <h2>Warm hospitality, quality service, and an experience worth remembering</h2>
+      <p>At Center Lodge, we are committed to providing warm hospitality, quality service, and an experience worth remembering. Your Comfort, Your Celebrations, Our Hospitality!</p>
+      <a class="btn" href="#reserve" data-intent="Accommodation">Plan your visit</a>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="wrap" id="gallery">
+    <h2>Gallery</h2>
+    <div class="g gal">
+      <div class="c"><div class="ph s2" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Accommodation</h3></div></div>
+      <div class="c"><div class="ph s3" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Restaurant</h3></div></div>
+      <div class="c"><div class="ph s4" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Conference facilities</h3></div></div>
+      <div class="c"><div class="ph s5" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Wedding receptions</h3></div></div>
+      <div class="c"><div class="ph s1" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Kitchen parties</h3></div></div>
+      <div class="c"><div class="ph s6" style="--img:url('blue ginger ad6.png')"></div><div class="cb"><h3>Corporate events</h3></div></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="wrap" id="contact" style="padding-top:0">
+    <div class="two">
+      <div>
+        <h2 class="h-ic"><i class="ico sm" data-icon="phone"></i> Contact us today</h2>
+        <p class="m lead-l">Contact us today to book your accommodation, reserve a table, or plan your next event with us.</p>
+        <ul class="details">
+          <li data-cfg-row="phone"><i class="ico xs" data-icon="phone"></i><a data-cfg="phone" data-href="tel"></a></li>
+          <li data-cfg-row="email"><i class="ico xs" data-icon="mail"></i><a data-cfg="email" data-href="mailto"></a></li>
+          <li data-cfg-row="address"><i class="ico xs" data-icon="pin"></i><span data-cfg="address"></span></li>
+        </ul>
+      </div>
+      <form class="f c cb" id="contactForm" novalidate>
+        <h3>Send an enquiry</h3>
+        <label>Your name<input name="name" autocomplete="name" required></label>
+        <label>Phone<input name="phone" type="tel" autocomplete="tel" required></label>
+        <label>What for
+          <select name="topic" class="topic">
+            <option>Accommodation</option>
+            <option>Restaurant table</option>
+            <option>Conference facilities</option>
+            <option>Wedding reception</option>
+            <option>Kitchen party / marriage blessing</option>
+            <option>Corporate event / special function</option>
+          </select>
+        </label>
+        <label>Date<input name="date" type="date"></label>
+        <label>Message<textarea name="message" rows="3"></textarea></label>
+        <button class="btn" type="submit">Send enquiry</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap g">
+    <div>
+      <a class="foot-logo" href="#home" aria-label="Center Lodge home"><img src="images/center-lodge-logo.png" alt="Center Lodge" width="116" height="84"></a>
+      <p>Where Comfort Meets Exceptional Hospitality.</p>
+      <p class="pledge-line"><i class="ico xs" data-icon="heart"></i> Your Comfort, Your Celebrations, Our Hospitality!</p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <p><a href="#services">Services</a><br><a href="#about">About</a><br><a href="#gallery">Gallery</a><br><a href="book.html">Book a room</a><br><a href="manage.html">My bookings</a><br><a href="#contact">Contact</a></p>
+    </div>
+    <div>
+      <h3>Book with us</h3>
+      <p>Accommodation, restaurant tables, conferences, weddings, kitchen parties, marriage blessings and corporate events.</p>
+    </div>
+    <div>
+      <h3>Follow</h3>
+      <p class="tags">#CenterLodge #HospitalityAtItsBest #Accommodation #Restaurant #ConferenceFacilities #WeddingVenue #KitchenParty #MarriageBlessing #CorporateEvents #CelebrateWithUs</p>
+    </div>
+  </div>
+  <div class="legal">&copy; <span id="year">2026</span> Center Lodge. All rights reserved.</div>
+</footer>
+
+<a href="#contact" class="wa" id="waFloat" aria-label="Chat with Center Lodge on WhatsApp" hidden>
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3Zm0 23.7a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.7 10.7 0 1 1 16 26.700Zm5.900-8c-.3-.2-1.900-.9-2.200-1s-.5-.2-.7.200-.8 1-1 1.200-.4.200-.7.100a8.800 8.800 0 0 1-4.400-3.800c-.3-.6.300-.5.900-1.700.1-.2 0-.4 0-.5l-1-2.300c-.2-.6-.5-.5-.7-.5h-.6a1.200 1.200 0 0 0-.9.400 3.700 3.700 0 0 0-1.100 2.700 6.400 6.400 0 0 0 1.400 3.400 14.700 14.700 0 0 0 5.600 4.900c2.100.9 2.900 1 3.900.8a3.300 3.300 0 0 0 2.200-1.500 2.700 2.700 0 0 0 .2-1.500c-.1-.1-.3-.2-.6-.4Z"/></svg>
+</a>
+<div id="toasts" aria-live="polite"></div>
+
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase-library.min.js"></script>
+<script src="js/common.js"></script>
+<script src="inscript.js"></script>
+</body>
+</html>

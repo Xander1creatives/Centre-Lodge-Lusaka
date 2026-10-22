@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="instyles.css"><link rel="stylesheet" href="css/app.css">
+<title>Setup check – Center Lodge</title>
+</head>
+<body>
+<header id="header">
+  <a class="logo" href="index.html" aria-label="Center Lodge home"><img src="images/logo.png" alt="Center Lodge" width="94" height="68"></a>
+  <nav id="nav" aria-label="Main"><a href="index.html">Home</a><a href="book.html">Book a room</a><a href="admin.html">Staff sign in</a></nav>
+</header>
+<main class="page" id="main">
+ <div class="narrow">
+  <h1>Setup check</h1>
+  <p class="lead-sm">This page tests your Supabase connection and tells you in plain words what is missing. It never shows secrets. You can delete it from your website once everything is green.</p>
+  <div id="checks"><p class="mini">Running checks…</p></div>
+  <p><button class="btn o" id="again" type="button">Run the checks again</button></p>
+ </div>
+</main>
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase-library.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/setup-check.js"></script>
+</body>
+</html>

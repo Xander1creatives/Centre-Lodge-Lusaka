@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="instyles.css"><link rel="stylesheet" href="css/app.css">
+<title>My bookings – Center Lodge</title>
+<meta name="description" content="Track, change or cancel your Center Lodge booking.">
+<meta name="robots" content="noindex">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header id="header">
+  <a class="logo" href="index.html" aria-label="Center Lodge home"><img src="images/logo.png" alt="Center Lodge" width="94" height="68"></a>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+  <nav id="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="index.html#services">Services</a>
+    <a href="book.html">Book a room</a>
+    <a href="manage.html">My bookings</a>
+    <a href="index.html#contact">Contact</a>
+    <a class="btn" href="book.html">Book now</a>
+  </nav>
+</header>
+<main class="page" id="main">
+ <div class="narrow">
+  <h1>My bookings</h1>
+  <p class="lead-sm">Enter the email address or phone number you booked with to see the status of your reservations. To change or cancel a booking you will also need its access code (shown when you booked).</p>
+  <div class="alert bad" id="offline" hidden>The booking system is not connected yet. Please contact the lodge.</div>
+  <form class="searchbar" id="lookupForm" style="grid-template-columns:1fr auto" novalidate>
+    <label>Email or phone number<input id="contact" autocomplete="email" maxlength="254" placeholder="you@example.com or 097 123 4567" required></label>
+    <button type="submit" class="go btn" id="findBtn">Find my bookings</button>
+  </form>
+  <div id="msg" aria-live="polite"></div>
+  <div id="list" aria-live="polite"></div>
+ </div>
+</main>
+<footer>
+  <div class="legal" style="border-top:0;padding:30px 5vw">
+    <a class="foot-logo" href="index.html" aria-label="Center Lodge home"><img src="images/logo.png" alt="Center Lodge" width="116" height="84"></a>
+    <p style="color:#fff;font:400 20px var(--serif);margin-bottom:6px">Center Lodge — Your Comfort, Your Celebrations, Our Hospitality!</p>
+    <p>We will never ask for your card number, PIN or password by phone, SMS, WhatsApp or email.</p>
+    <p>&copy; <span id="year">2026</span> Center Lodge. All rights reserved.</p>
+  </div>
+</footer>
+<script src="supabase-config.js"></script>
+<script src="vendor/supabase-library.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/manage.js"></script>
+</body>
+</html>
