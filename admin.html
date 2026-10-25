@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.web3forms.com; form-action 'self'; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="theme-color" content="#ffffff">
@@ -40,7 +40,8 @@
     <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
     <button role="tab" data-tab="reservations" aria-selected="false">Reservations</button>
     <button role="tab" data-tab="availability" aria-selected="false">Availability</button>
-    <button role="tab" data-tab="new" aria-selected="false">New booking</button>
+    <button role="tab" data-tab="new" aria-selected="false">Reserve a room</button>
+    <button role="tab" data-tab="blocks" aria-selected="false">Block rooms</button>
     <button role="tab" data-tab="rooms" aria-selected="false">Rooms &amp; rates</button>
     <button role="tab" data-tab="notifications" aria-selected="false">Notifications <b id="tabN" class="dotn" hidden>0</b></button>
   </div>
@@ -49,6 +50,7 @@
     <section id="p-reservations" hidden></section>
     <section id="p-availability" hidden></section>
     <section id="p-new" hidden></section>
+    <section id="p-blocks" hidden></section>
     <section id="p-rooms" hidden></section>
     <section id="p-notifications" hidden></section>
   </main>
@@ -56,8 +58,14 @@
 <dialog id="dlg" aria-label="Booking details"></dialog>
 
 <script src="supabase-config.js"></script>
+<script src="site-settings.js"></script>
 <script src="vendor/supabase-library.min.js"></script>
 <script src="js/common.js"></script>
+<script src="js/countries.js"></script>
+<script src="js/mailer.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script src="js/ticket.js"></script>
+<script src="js/pay.js"></script>
 <script src="js/admin.js"></script>
 </body>
 </html>

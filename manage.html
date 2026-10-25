@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://*.lenco.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.web3forms.com https://*.lenco.co; frame-src https://*.lenco.co; form-action 'self'; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="images/favicon.png">
@@ -32,7 +32,7 @@
 <main class="page" id="main">
  <div class="narrow">
   <h1>My bookings</h1>
-  <p class="lead-sm">Enter the email address or phone number you booked with to see the status of your reservations. To change or cancel a booking you will also need its access code (shown when you booked).</p>
+  <p class="lead-sm">Enter the email address or phone number you booked with to see the status of your reservations. To change a booking, ask for a cancellation, pay online or download your receipt you will also need its access code (shown when you booked).</p>
   <div class="alert bad" id="offline" hidden>The booking system is not connected yet. Please contact the lodge.</div>
   <form class="searchbar" id="lookupForm" style="grid-template-columns:1fr auto" novalidate>
     <label>Email or phone number<input id="contact" autocomplete="email" maxlength="254" placeholder="you@example.com or 097 123 4567" required></label>
@@ -51,8 +51,13 @@
   </div>
 </footer>
 <script src="supabase-config.js"></script>
+<script src="site-settings.js"></script>
 <script src="vendor/supabase-library.min.js"></script>
 <script src="js/common.js"></script>
+<script src="js/mailer.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script src="js/ticket.js"></script>
+<script src="js/pay.js"></script>
 <script src="js/manage.js"></script>
 </body>
 </html>

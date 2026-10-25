@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; base-uri 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://*.lenco.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.web3forms.com https://*.lenco.co; frame-src https://*.lenco.co; form-action 'self'; base-uri 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="images/favicon.png">
@@ -55,8 +55,15 @@
           <label class="fld wide">Full name<input id="name" name="name" autocomplete="name" maxlength="80" required></label>
           <label class="fld">Email<input id="email" name="email" type="email" autocomplete="email" maxlength="254" required></label>
           <label class="fld">Phone / WhatsApp<input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" placeholder="097 123 4567" required></label>
+          <label class="fld wide">Country you are travelling from<select id="country" name="country" class="country-sel" autocomplete="country-name" required><option value="">Select your country…</option></select></label>
           <label class="fld wide">Special requests (optional)<textarea id="notes" name="notes" maxlength="500" placeholder="Arrival time, extra bed, anything we should know"></textarea></label>
         </div>
+        <fieldset class="paymodes" id="paymodes" style="border:0;padding:0;margin:18px 0 0">
+          <legend style="font:500 24px var(--serif);margin-bottom:6px">How would you like to pay?</legend>
+          <label class="paymode"><input type="radio" name="pay" value="cash" checked><div><b>Pay at the lodge</b><span>Cash or card when you arrive.</span></div></label>
+          <label class="paymode"><input type="radio" name="pay" value="bank_transfer"><div><b>Prepayment by bank transfer</b><span>Pay before you arrive. We show you the bank details after you book.</span></div></label>
+          <label class="paymode" id="payOnlineOpt" hidden><input type="radio" name="pay" value="online"><div><b>Pay now online</b><span>Card or mobile money in Lenco's secure payment window. Your rooms are held as soon as the payment is confirmed.</span></div></label>
+        </fieldset>
         <label class="hp" aria-hidden="true">Leave this empty<input id="hp" name="website" tabindex="-1" autocomplete="off"></label>
         <label class="consent"><input type="checkbox" id="agree" required> I agree that Center Lodge may use these details to process and manage my booking.</label>
         <div id="formMsg" aria-live="polite"></div>
@@ -64,7 +71,7 @@
           <button type="button" class="btn o" id="back">&larr; Change room or dates</button>
           <button type="submit" class="btn" id="confirm">Confirm reservation</button>
         </div>
-        <p class="safe">You pay at the lodge. We never collect card details on this website.</p>
+        <p class="safe">Card and mobile-money details are entered only in Lenco's secure window. This website never sees or stores them.</p>
       </form>
       <aside class="summary" id="summary" aria-label="Booking summary"></aside>
     </div>
@@ -82,8 +89,14 @@
   </div>
 </footer>
 <script src="supabase-config.js"></script>
+<script src="site-settings.js"></script>
 <script src="vendor/supabase-library.min.js"></script>
 <script src="js/common.js"></script>
+<script src="js/countries.js"></script>
+<script src="js/mailer.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script src="js/ticket.js"></script>
+<script src="js/pay.js"></script>
 <script src="js/book.js"></script>
 </body>
 </html>

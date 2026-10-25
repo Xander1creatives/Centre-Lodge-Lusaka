@@ -1,10 +1,5 @@
-// ===== CENTER LODGE SETTINGS — fill these in =====
-const CONFIG = {
-  whatsapp: '',   // digits only with country code, e.g. '260971234567'
-  phone:    '',   // shown on the page, e.g. '+260 97 123 4567'
-  email:    '',   // e.g. 'info@centerlodge.com'
-  address:  ''    // e.g. 'Plot 12, Main Road, Town'
-};
+// Contact details, social links and keys come from site-settings.js (cleaned by js/common.js)
+const CONFIG = (window.CL && CL.site) || { phone: '', whatsapp: '', email: '', address: '', mapQuery: '', social: {}, bank: {} };
 
 // ===== Animated icons (inline SVG, animated with CSS in instyles.css) =====
 const HEART = 'M32 54S8 40 8 24a12 12 0 0 1 24-4 12 12 0 0 1 24 4c0 16-24 30-24 30z';
@@ -114,7 +109,32 @@ document.querySelectorAll('[data-cfg]').forEach(el => {
   el.textContent = val;
   if (el.dataset.href === 'tel') el.href = 'tel:' + val.replace(/[^\d+]/g, '');
   if (el.dataset.href === 'mailto') el.href = 'mailto:' + val;
+  if (el.dataset.href === 'wa') { el.textContent = 'Chat with us on WhatsApp'; el.href = CL.site.waLink('Hello Center Lodge, I would like to make an enquiry.'); el.target = '_blank'; el.rel = 'noopener noreferrer'; }
 });
+// social media icons (only the links you filled in)
+(() => {
+  const ul = document.getElementById('socials'); if (!ul) return;
+  const icons = window.CL_SOCIAL_ICONS || {}, NAMES = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', x: 'X (Twitter)', youtube: 'YouTube', linkedin: 'LinkedIn', whatsapp: 'WhatsApp' };
+  const links = { ...CONFIG.social }; if (CONFIG.whatsapp) links.whatsapp = CL.site.waLink('Hello Center Lodge, I would like to make an enquiry.');
+  const items = Object.keys(NAMES).filter(k => links[k] && icons[k]).map(k => {
+    const NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); p.setAttribute('d', icons[k]); svg.append(p);
+    const a = document.createElement('a'); a.href = links[k]; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.setAttribute('aria-label', NAMES[k] + ' (opens in a new tab)'); a.title = NAMES[k]; a.append(svg);
+    const li = document.createElement('li'); li.append(a); return li;
+  });
+  if (items.length) ul.replaceChildren(...items); else ul.hidden = true;
+})();
+// location map (Google Maps embed, no key needed)
+(() => {
+  const wrap = document.getElementById('mapWrap'); if (!wrap) return;
+  const q = CONFIG.mapQuery || CONFIG.address;
+  if (!q) { wrap.hidden = true; return; }
+  const f = document.createElement('iframe');
+  f.src = 'https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
+  f.title = 'Map showing the location of Center Lodge'; f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
+  f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox'); f.allowFullscreen = true;
+  wrap.replaceChildren(f);
+})();
 const wa = document.getElementById('waFloat');
 if (CONFIG.whatsapp) {
   wa.hidden = false;
@@ -133,8 +153,17 @@ const toast = msg => {
 const today = new Date().toISOString().slice(0, 10);
 document.querySelectorAll('input[type=date]').forEach(i => i.min = today);
 
+async function deliver(subject, fields, replyTo, plain) {
+  if (window.CL && CL.mail && CL.site.web3formsKey) {
+    if (await CL.mail.send(subject, fields, replyTo)) { toast('Thank you! Your message has been sent to Center Lodge.'); return true; }
+    toast('We could not send that online, trying another way…');
+  }
+  if (CONFIG.whatsapp) { window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(plain), '_blank', 'noopener'); toast('Opening WhatsApp so you can send your message.'); return true; }
+  if (CONFIG.email) { location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(plain); toast('Opening your email app.'); return true; }
+  toast('Contact details are not set up yet. Add them in site-settings.js.'); return false;
+}
 function handleEnquiry(form) {
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const f = new FormData(form);
     let ok = true;
@@ -152,15 +181,10 @@ function handleEnquiry(form) {
       f.get('date') ? 'Date: ' + f.get('date') : '',
       f.get('message') ? 'Message: ' + f.get('message') : ''
     ].filter(Boolean).join('\n');
-    if (CONFIG.whatsapp) {
-      window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-      toast('Opening WhatsApp so you can send your enquiry.');
-    } else if (CONFIG.email) {
-      location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Enquiry: ' + f.get('topic')) + '&body=' + encodeURIComponent(text);
-      toast('Opening your email app.');
-    } else {
-      toast('Contact details are not set up yet. Add them in inscript.js.');
-    }
+    const btn = form.querySelector('button[type=submit]'); btn.disabled = true;
+    const sent = await deliver('Website enquiry: ' + f.get('topic') + ' - ' + f.get('name'),
+      { 'Name': f.get('name'), 'Phone': f.get('phone'), 'Enquiry about': f.get('topic'), 'Date': f.get('date'), 'Message': f.get('message') }, undefined, text);
+    btn.disabled = false; if (sent) form.reset();
   });
   form.querySelectorAll('input').forEach(i => i.addEventListener('input', () => i.classList.remove('invalid')));
 }
@@ -228,7 +252,7 @@ function pickDetails() {
   };
 }
 
-$('bkForm').addEventListener('submit', e => {
+$('bkForm').addEventListener('submit', async e => {
   e.preventDefault();
   // step 1 -> step 2
   if (!$('step1').hidden) {
@@ -253,16 +277,12 @@ $('bkForm').addEventListener('submit', e => {
   const text = ['Hello Center Lodge, I would like to make a reservation request.', '', booking.title,
     ...booking.lines.filter(Boolean), '', 'Name: ' + name.value.trim(), 'Phone: ' + phone.value.trim(),
     $('bkNotes').value.trim() ? 'Notes: ' + $('bkNotes').value.trim() : ''].filter((l, i, a) => l !== '' || (a[i - 1] !== '' && i)).join('\n');
-  if (CONFIG.whatsapp) {
-    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-    toast('Opening WhatsApp so you can send your reservation request.');
-  } else if (CONFIG.email) {
-    location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent(booking.title) + '&body=' + encodeURIComponent(text);
-    toast('Opening your email app.');
-  } else {
-    toast('Contact details are not set up yet. Add them in inscript.js.');
-    return;
-  }
+  const sbtn = $('bkForm').querySelector('#step2 .go'); sbtn.disabled = true;
+  const sent = await deliver('Website request: ' + booking.title + ' - ' + name.value.trim(),
+    { 'Request': booking.title, 'Details': booking.lines.filter(Boolean).join(' | '), 'Name': name.value.trim(), 'Phone': phone.value.trim(), 'Notes': $('bkNotes').value.trim() }, undefined, text);
+  sbtn.disabled = false;
+  if (!sent) return;
+  name.value = ''; phone.value = ''; $('bkNotes').value = '';
   showStep(1);
 });
 [$('bkName'), $('bkPhone')].forEach(i => i.addEventListener('input', () => i.classList.remove('invalid')));
@@ -276,10 +296,17 @@ arm();
   if (!window.CL || !CL.configured) return;
   const res = await CL.rpc('get_availability', { p_in: CL.addDays(CL.todayISO(), 1), p_out: CL.addDays(CL.todayISO(), 2) });
   if (!res.ok || !res.rooms.length) return;
-  document.getElementById('roomGrid').replaceChildren(...res.rooms.map(r =>
-    CL.h('article', { class: 'c' }, CL.h('div', { class: 'cb' },
-      CL.h('h3', null, r.name), CL.h('p', { class: 'm' }, r.description),
-      CL.h('p', null, 'From ', CL.h('b', null, CL.money(r.price_per_night)), ' / night'),
-      CL.h('a', { class: 'btn o', href: 'book.html' }, 'Check availability')))));
+  const SCENE = { standard: 's2', deluxe: 's3', twin: 's4', royal: 's5' };
+  document.getElementById('roomGrid').replaceChildren(...res.rooms.map(r => {
+    const slug = /^[a-z0-9-]{1,40}$/.test(r.slug) ? r.slug : 'standard';
+    // drop images/room-<name>.jpg in to override the photo; otherwise images/room-<name>.webp is used
+    return CL.h('article', { class: 'c' },
+      CL.h('div', { class: 'ph room-ph ' + (SCENE[slug] || 's1'), style: `--img:url('images/room-${slug}.jpg'),url('images/room-${slug}.webp')`, role: 'img', 'aria-label': r.name }),
+      CL.h('div', { class: 'cb' },
+        CL.h('h3', null, r.name), CL.h('p', { class: 'm' }, r.description),
+        CL.h('p', { class: 'room-price' }, CL.money(r.price_per_night), CL.h('small', null, ' / night')),
+        CL.h('p', { class: 'room-meta' }, 'Sleeps up to ' + r.max_guests + ' per room'),
+        CL.h('a', { class: 'btn o', href: 'book.html' }, 'Check availability')));
+  }));
   document.getElementById('rooms').hidden = false;
 })();
