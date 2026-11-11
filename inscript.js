@@ -36,7 +36,7 @@ window.addEventListener('resize', () => { if (innerWidth > 900) setMenu(false); 
 
 // ===== Hero slider =====
 const SLIDES = [
-  { i: 'sparkle',    t: 'Center Lodge',          p: 'Where Comfort Meets Exceptional Hospitality',                      b: 'Book your stay',   topic: 'Accommodation' },
+  { i: 'sparkle',    t: 'Centre Lodge',          p: 'Where Comfort Meets Exceptional Hospitality',                      b: 'Book your stay',   topic: 'Accommodation' },
   { i: 'bed',        t: 'Accommodation',         p: 'Comfortable and relaxing rooms for your stay',                     b: 'Book a room',      topic: 'Accommodation' },
   { i: 'cloche',     t: 'Restaurant',            p: 'Delicious meals and a welcoming dining experience',                b: 'Reserve a table',  topic: 'Restaurant table' },
   { i: 'conference', t: 'Conference Facilities', p: 'Professional spaces for meetings, workshops, and business conferences', b: 'Enquire now', topic: 'Conference facilities' },
@@ -113,16 +113,20 @@ document.querySelectorAll('[data-cfg]').forEach(el => {
 });
 // social media icons (only the links you filled in)
 (() => {
-  const ul = document.getElementById('socials'); if (!ul) return;
-  const icons = window.CL_SOCIAL_ICONS || {}, NAMES = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', x: 'X (Twitter)', youtube: 'YouTube', linkedin: 'LinkedIn', whatsapp: 'WhatsApp' };
-  const links = { ...CONFIG.social }; if (CONFIG.whatsapp) links.whatsapp = CL.site.waLink('Hello Center Lodge, I would like to make an enquiry.');
-  const items = Object.keys(NAMES).filter(k => links[k] && icons[k]).map(k => {
-    const NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
-    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); p.setAttribute('d', icons[k]); svg.append(p);
-    const a = document.createElement('a'); a.href = links[k]; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.setAttribute('aria-label', NAMES[k] + ' (opens in a new tab)'); a.title = NAMES[k]; a.append(svg);
-    const li = document.createElement('li'); li.append(a); return li;
+  const lists = [...document.querySelectorAll('ul[data-socials]')]; if (!lists.length) return;
+  const icons = window.CL_SOCIAL_ICONS || {}, NAMES = { facebook: 'Facebook', tiktok: 'TikTok', instagram: 'Instagram', linkedin: 'LinkedIn', x: 'X (Twitter)', youtube: 'YouTube' };
+  const links = { ...CONFIG.social };
+  const keys = Object.keys(NAMES).filter(k => links[k] && icons[k]);
+  lists.forEach(ul => {
+    if (!keys.length) { ul.hidden = true; return; }
+    ul.replaceChildren(...keys.map(k => {
+      const NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg'), p = document.createElementNS(NS, 'path');
+      svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('aria-hidden', 'true'); p.setAttribute('d', icons[k]); svg.append(p);
+      const a = document.createElement('a'); a.href = links[k]; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.className = 'sn-' + k;
+      a.setAttribute('aria-label', NAMES[k] + ' (opens in a new tab)'); a.title = NAMES[k]; a.append(svg);
+      const li = document.createElement('li'); li.append(a); return li;
+    }));
   });
-  if (items.length) ul.replaceChildren(...items); else ul.hidden = true;
 })();
 // location map (Google Maps embed, no key needed)
 (() => {
@@ -155,7 +159,16 @@ document.querySelectorAll('input[type=date]').forEach(i => i.min = today);
 
 async function deliver(subject, fields, replyTo, plain) {
   if (window.CL && CL.mail && CL.site.web3formsKey) {
-    if (await CL.mail.send(subject, fields, replyTo)) { toast('Thank you! Your message has been sent to Center Lodge.'); return true; }
+    if (await CL.mail.send(subject, fields, replyTo)) {
+      const first = String(fields.Name || '').trim().split(/\s+/)[0], hi = first ? 'Thank you, ' + first + '.' : 'Thank you.';
+      const isEnq = /^Website enquiry/.test(subject);
+      if (CL.popup) CL.popup(isEnq ? 'Message sent!' : 'Request received!',
+        isEnq ? hi + ' Your enquiry has reached Center Lodge. We will get back to you as soon as we can.'
+              : hi + ' Your reservation request has been sent to our team. We will contact you shortly on the number you gave us to confirm.');
+      else toast('Thank you! Your message has been sent to Center Lodge.');
+      return true;
+    }
+    if (CL.popup && !CONFIG.whatsapp && !CONFIG.email) { CL.popup('Could not send', 'Something went wrong while sending your message. Please check your connection and try again.', true); return false; }
     toast('We could not send that online, trying another way…');
   }
   if (CONFIG.whatsapp) { window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(plain), '_blank', 'noopener'); toast('Opening WhatsApp so you can send your message.'); return true; }
@@ -291,6 +304,126 @@ bindIntent();
 show(0);
 arm();
 
+// ===== Shared lightbox (Gallery tiles + the 4 images inside a detail dialog) =====
+const lbDlg = $('lightbox'), lbStage = $('lbStage'), lbCaption = $('lbCaption');
+let LB_SET = [], LB_I = 0;
+function openLightbox(set, i) {
+  LB_SET = set; LB_I = ((i % set.length) + set.length) % set.length;
+  drawLightbox();
+  if (!lbDlg.open) lbDlg.showModal();
+}
+function drawLightbox() {
+  const item = LB_SET[LB_I];
+  lbStage.style.setProperty('--img', item.img);
+  lbStage.className = 'lb-stage ' + (item.scene || 's1');
+  lbCaption.textContent = LB_SET.length > 1 ? `${item.caption}  ·  ${LB_I + 1} / ${LB_SET.length}` : (item.caption || '');
+  const multi = LB_SET.length > 1;
+  $('lbPrev').hidden = !multi; $('lbNext').hidden = !multi;
+}
+$('lbPrev').addEventListener('click', () => { LB_I = (LB_I - 1 + LB_SET.length) % LB_SET.length; drawLightbox(); });
+$('lbNext').addEventListener('click', () => { LB_I = (LB_I + 1) % LB_SET.length; drawLightbox(); });
+$('lbClose').addEventListener('click', () => lbDlg.close());
+lbDlg.addEventListener('click', e => { if (e.target === lbDlg) lbDlg.close(); });
+document.addEventListener('keydown', e => {
+  if (!lbDlg.open) return;
+  if (e.key === 'ArrowLeft') $('lbPrev').click();
+  if (e.key === 'ArrowRight') $('lbNext').click();
+});
+
+// ===== Gallery tiles: click to open in the lightbox, with next/previous =====
+const GALLERY_TILES = [...document.querySelectorAll('#gallery .gtile')];
+const GALLERY_SET = GALLERY_TILES.map(t => ({
+  img: getComputedStyle(t.querySelector('.ph')).getPropertyValue('--img') || t.querySelector('.ph').style.getPropertyValue('--img'),
+  scene: [...t.querySelector('.ph').classList].find(c => /^s[1-6]$/.test(c)),
+  caption: t.querySelector('h3').textContent
+}));
+GALLERY_TILES.forEach((t, i) => t.addEventListener('click', () => openLightbox(GALLERY_SET, i)));
+
+// ===== Shared detail dialog (Our Services / Our Rooms) =====
+const ddDlg = $('detailDlg');
+function openDetail({ title, meta, description, images, cta }) {
+  const imgDivs = images.map((im, i) => {
+    const d = document.createElement('div');
+    d.className = 'ph ' + (im.scene || 's1');
+    d.style.setProperty('--img', im.img);
+    d.setAttribute('role', 'button'); d.tabIndex = 0; d.setAttribute('aria-label', 'View larger: ' + im.caption);
+    const open = () => openLightbox(images.map(x => ({ img: x.img, scene: x.scene, caption: x.caption })), i);
+    d.addEventListener('click', open);
+    d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    return d;
+  });
+  const card = document.createElement('div'); card.className = 'dd-card';
+  const head = document.createElement('div'); head.className = 'dd-head';
+  const h = document.createElement('h3'); h.textContent = title;
+  const x = document.createElement('button'); x.type = 'button'; x.className = 'dd-close'; x.setAttribute('aria-label', 'Close'); x.innerHTML = '&times;';
+  x.addEventListener('click', () => ddDlg.close());
+  head.append(h, x);
+  const imgs = document.createElement('div'); imgs.className = 'dd-imgs'; imgs.append(...imgDivs);
+  const body = document.createElement('div'); body.className = 'dd-body';
+  if (meta && meta.length) {
+    const m = document.createElement('p'); m.className = 'dd-meta';
+    meta.forEach(line => { const b = document.createElement('b'); b.textContent = line; m.append(b, ' '); });
+    body.append(m);
+  }
+  const p = document.createElement('p'); p.textContent = description; body.append(p);
+  if (cta) { const a = document.createElement('a'); a.className = 'btn'; a.href = cta.href; if (cta.intent) a.dataset.intent = cta.intent; a.textContent = cta.label; body.append(a); }
+  card.append(head, imgs, body);
+  ddDlg.replaceChildren(card);
+  paintIcons(card); bindIntent(card);
+  if (!ddDlg.open) ddDlg.showModal();
+}
+ddDlg.addEventListener('click', e => { if (e.target === ddDlg) ddDlg.close(); });
+
+// ===== Our Services: click a card to see its details and 4 photos =====
+const SERVICES = {
+  accommodation: {
+    title: 'Accommodation',
+    description: 'Comfortable, quiet rooms set up for genuine rest, from a single overnight stop to a longer stay. Choose Standard, Deluxe, Twin or Royal depending on your space and budget — see Our Rooms below for live availability and pricing.',
+    meta: ['Daily housekeeping', 'Free Wi-Fi'],
+    cta: { label: 'Check room availability', href: '#reserve', intent: 'Accommodation' }
+  },
+  restaurant: {
+    title: 'Restaurant Services',
+    description: 'A relaxed dining room serving hearty local and international dishes, from an early breakfast to a late dinner. Whether it is a quick meal or a table for a group, our team will look after you.',
+    meta: ['Breakfast, lunch & dinner', 'Groups welcome'],
+    cta: { label: 'Reserve a table', href: '#reserve', intent: 'Restaurant table' }
+  },
+  conference: {
+    title: 'Conference Facilities',
+    description: 'Flexible meeting space for workshops, training sessions and business conferences, with seating arranged to suit your group size and refreshments available throughout the day.',
+    meta: ['Flexible seating', 'Catering available'],
+    cta: { label: 'Enquire about conferences', href: '#reserve', intent: 'Conference facilities' }
+  },
+  wedding: {
+    title: 'Wedding Receptions',
+    description: 'A warm, beautifully set hall for your reception, sized and styled around your day. Our team works with you on layout, catering and timing so you can focus on celebrating.',
+    meta: ['Full-hall setup', 'Catering available'],
+    cta: { label: 'Plan your wedding day', href: '#reserve', intent: 'Wedding reception' }
+  },
+  'kitchen-party': {
+    title: 'Kitchen Parties & Marriage Blessings',
+    description: 'A welcoming venue for the traditions that matter — kitchen parties, marriage blessings and family celebrations — with space for family, friends and all the festivities that come with them.',
+    meta: ['Family celebrations', 'Flexible guest numbers'],
+    cta: { label: 'Enquire about your celebration', href: '#reserve', intent: 'Kitchen party / marriage blessing' }
+  },
+  'corporate-events': {
+    title: 'Corporate Events & Special Functions',
+    description: 'From staff functions to product launches, we host business gatherings and special occasions with the space, seating and service to match the occasion.',
+    meta: ['Business functions', 'Custom setups'],
+    cta: { label: 'Enquire about your event', href: '#reserve', intent: 'Corporate event / special function' }
+  }
+};
+document.querySelectorAll('#services .c[data-service]').forEach(card => {
+  const slug = card.dataset.service, svc = SERVICES[slug];
+  if (!svc) return;
+  const scene = [...card.querySelector('.ph').classList].find(c => /^s[1-6]$/.test(c)) || 's1';
+  const images = [1, 2, 3, 4].map(n => ({ img: `url('images/service-${slug}-${n}.jpg')`, scene, caption: svc.title }));
+  const open = () => openDetail({ title: svc.title, meta: svc.meta, description: svc.description, images, cta: svc.cta });
+  card.addEventListener('click', e => { if (e.target.closest('a')) return; open(); });
+  card.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('a')) { e.preventDefault(); open(); } });
+});
+
+
 // ===== Live room types and prices from the booking system =====
 (async () => {
   if (!window.CL || !CL.configured) return;
@@ -299,14 +432,27 @@ arm();
   const SCENE = { standard: 's2', deluxe: 's3', twin: 's4', royal: 's5' };
   document.getElementById('roomGrid').replaceChildren(...res.rooms.map(r => {
     const slug = /^[a-z0-9-]{1,40}$/.test(r.slug) ? r.slug : 'standard';
-    // drop images/room-<name>.jpg in to override the photo; otherwise images/room-<name>.webp is used
-    return CL.h('article', { class: 'c' },
-      CL.h('div', { class: 'ph room-ph ' + (SCENE[slug] || 's1'), style: `--img:url('images/room-${slug}.jpg'),url('images/room-${slug}.webp')`, role: 'img', 'aria-label': r.name }),
+    const scene = SCENE[slug] || 's1';
+    // drop images/room-<slug>-1.jpg (through -4.jpg) in to show your own photos; card and detail view share image 1
+    const card = CL.h('article', { class: 'c', 'data-slug': slug, tabindex: '0', role: 'button', 'aria-haspopup': 'dialog' },
+      CL.h('div', { class: 'ph room-ph ' + scene, style: `--img:url('images/room-${slug}-1.jpg'),url('images/room-${slug}.webp')`, role: 'img', 'aria-label': r.name },
+        CL.h('span', { class: 'view-chip' }, 'View details')),
       CL.h('div', { class: 'cb' },
         CL.h('h3', null, r.name), CL.h('p', { class: 'm' }, r.description),
         CL.h('p', { class: 'room-price' }, CL.money(r.price_per_night), CL.h('small', null, ' / night')),
         CL.h('p', { class: 'room-meta' }, 'Sleeps up to ' + r.max_guests + ' per room'),
         CL.h('a', { class: 'btn o', href: 'book.html' }, 'Check availability')));
+    const images = [1, 2, 3, 4].map(n => ({ img: n === 1 ? `url('images/room-${slug}-1.jpg'),url('images/room-${slug}.webp')` : `url('images/room-${slug}-${n}.jpg')`, scene, caption: r.name }));
+    const open = () => openDetail({
+      title: r.name,
+      meta: [CL.money(r.price_per_night) + ' / night', 'Sleeps up to ' + r.max_guests + ' per room'],
+      description: r.description,
+      images,
+      cta: { label: 'Check availability', href: 'book.html' }
+    });
+    card.addEventListener('click', e => { if (e.target.closest('a')) return; open(); });
+    card.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('a')) { e.preventDefault(); open(); } });
+    return card;
   }));
   document.getElementById('rooms').hidden = false;
 })();

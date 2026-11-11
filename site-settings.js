@@ -8,26 +8,26 @@ window.CL_SITE = {
 
   /* Shown in "Contact us today", the footer, the map and on printed/PNG bookings */
   CONTACT: {
-    phone:    '',     // e.g. '+260 97 123 4567'
-    whatsapp: '',     // digits only with country code, e.g. '260971234567'
-    email:    '',     // e.g. 'info@centerlodge.com'
-    address:  '',     // e.g. 'Plot 12, Great East Road, Lusaka'
-    mapQuery: ''      // optional: what to search on the map. Empty = use the address above.
+    phone:    '+26097 7754949',
+    whatsapp: '+260 977754949',   // digits only with country code
+    email:    'centrelodge.reservations@gmail.com',
+    address:  'Kafue Road, Opp China Mall Lusaka ZM, 10101',
+    mapQuery: 'https://maps.app.goo.gl/y9Cp5nToUNUKGxBw8'      // optional: what to search on the map. Empty = use the address above.
   },
 
   /* Full web addresses (https://...). Only the ones you fill in get an icon. */
   SOCIAL: {
-    facebook:  '',    // e.g. 'https://facebook.com/centerlodge'
-    instagram: '',
-    tiktok:    '',
+    facebook:  'https://www.facebook.com/CenterLodge',   // TODO: replace with your real page
+    instagram: 'https://www.instagram.com/centrelodge',  // TODO
+    tiktok:    'https://www.tiktok.com/@centrelodge',     // TODO
     x:         '',
     youtube:   '',
-    linkedin:  ''
+    linkedin:  'https://www.linkedin.com/company/centrelodge'  // TODO
   },
 
   /* Web3Forms: sends booking, payment and enquiry emails to the address you
      registered at web3forms.com. Paste your ACCESS KEY here (it is designed to be public). */
-  WEB3FORMS_ACCESS_KEY: '',
+  WEB3FORMS_ACCESS_KEY: 'd676428b-b875-4450-9d4d-16ea93df95b4',
 
   /* Lenco: your PUBLIC key only (starts with pub-...). The secret key NEVER goes in the website:
      it is stored inside Supabase (see README, step "Payments"). Leave empty to switch online payment off. */
