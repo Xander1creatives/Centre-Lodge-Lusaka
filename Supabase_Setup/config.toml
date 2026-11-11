@@ -1,0 +1,3 @@
+# Only needed if you deploy with the Supabase CLI
+[functions.lenco-payments]
+verify_jwt = false
